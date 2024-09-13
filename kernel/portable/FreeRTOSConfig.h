@@ -64,7 +64,7 @@
 #define configCPU_CLOCK_HZ						( SystemCoreClock )					//对应MCU主频
 #define configTICK_RATE_HZ						( ( TickType_t ) 1000 )				//系统运行时基，可相应修改，调整运行速度（时间片）
 #define configMAX_PRIORITIES					( 31 )                              //32位优先级
-#define configMINIMAL_STACK_SIZE				( ( unsigned short ) 128 )			//空闲任务堆栈大小
+#define configMINIMAL_STACK_SIZE				( ( unsigned short ) 128 )			//空闲任务堆栈大小      （单位 ： 字）
 #define configTOTAL_HEAP_SIZE					( ( size_t ) ( 10 * 1024 ) )		//堆空间
 #define configMAX_TASK_NAME_LEN					( 20 )								//任务描述名长度
 #define configUSE_TRACE_FACILITY				1                                   //可视化函数跟踪,获取任务状态信息
@@ -81,7 +81,7 @@
 #define configUSE_QUEUE_SETS                    0								//使用队列集
 
 #define configGENERATE_RUN_TIME_STATS                   1                               //定时器任务
-#define configUSE_STATS_FORMATTING_FUNCTIONS            1                              //统计任务运行时间  vTaskList()
+#define configUSE_STATS_FORMATTING_FUNCTIONS            0                              //统计任务运行时间  vTaskList()
 
 #if configGENERATE_RUN_TIME_STATS
     //extern uint32_t FreeRTOSRunTimeTicks;

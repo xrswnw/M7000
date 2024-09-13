@@ -44,4 +44,7 @@
 
 #define Sys_GetCpuId(id)                memcpy((id), (u8 *)(0x1ffff7e8), STM32_CPUID_LEN)
 #define Sys_SoftReset()                 (*((u32 *)0xE000ED0C) = 0x05fa0004)
+
+
+
 #endif

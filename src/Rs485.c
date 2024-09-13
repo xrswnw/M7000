@@ -22,6 +22,9 @@ void Rs485_QueueInit(void)
     g_sRs485RxQueue = xQueueCreate(UART_RX_QUEUE_NUM, sizeof(UART_FRAME));
 }
 
+
+TaskHandle_t g_hRs485Tx = NULL;
+
 void Rs485TxTask(void *pvParameters)
 {
     UART_FRAME uartFrame = {0};
@@ -35,6 +38,7 @@ void Rs485TxTask(void *pvParameters)
     }
 }
 
+TaskHandle_t g_hRs485Rx = NULL;
 void Rs485RxTask(void *pvParameters)
 {
     UART_FRAME uartFrame = {0};
@@ -42,7 +46,7 @@ void Rs485RxTask(void *pvParameters)
     {
         memset(&uartFrame, 0, sizeof(uartFrame)); 
         if(xQueueReceive(g_sRs485RxQueue, &uartFrame, portMAX_DELAY) == pdTRUE)
-        {  
+        {//此后可做逻辑处理
             xQueueSend(g_sRs485TxQueue, &uartFrame, portMAX_DELAY);
         }
     }

@@ -55,18 +55,22 @@ build stm32f10x_spi.pbi : index stm32f10x_spi.xcl
 build stm32f10x_tim.pbi : index stm32f10x_tim.xcl
 build stm32f10x_usart.pbi : index stm32f10x_usart.xcl
 build stm32f10x_wwdg.pbi : index stm32f10x_wwdg.xcl
+build AnyID_Stdlib.pbi : index AnyID_Stdlib.xcl
 build Device.pbi : index Device.xcl
+build LTE.pbi : index LTE.xcl
+build LTE_HL.pbi : index LTE_HL.xcl
 build Rs485.pbi : index Rs485.xcl
 build Rs485_HL.pbi : index Rs485_HL.xcl
 build Rtos_HL.pbi : index Rtos_HL.xcl
 build SysCfg.pbi : index SysCfg.xcl
-build M7000_part0.pbi : link system_stm32f10x.pbi port.pbi heap_4.pbi croutine.pbi event_groups.pbi list.pbi
-build M7000_part1.pbi : link queue.pbi stream_buffer.pbi tasks.pbi timers.pbi main.pbi stm32f10x_it.pbi
-build M7000_part2.pbi : link misc.pbi stm32f10x_adc.pbi stm32f10x_bkp.pbi stm32f10x_can.pbi stm32f10x_cec.pbi stm32f10x_crc.pbi
-build M7000_part3.pbi : link stm32f10x_dac.pbi stm32f10x_dbgmcu.pbi stm32f10x_dma.pbi stm32f10x_exti.pbi stm32f10x_flash.pbi stm32f10x_fsmc.pbi
-build M7000_part4.pbi : link stm32f10x_gpio.pbi stm32f10x_i2c.pbi stm32f10x_iwdg.pbi stm32f10x_pwr.pbi stm32f10x_rcc.pbi stm32f10x_rtc.pbi
-build M7000_part5.pbi : link stm32f10x_sdio.pbi stm32f10x_spi.pbi stm32f10x_tim.pbi stm32f10x_usart.pbi stm32f10x_wwdg.pbi Device.pbi
-build M7000_part6.pbi : link Rs485.pbi Rs485_HL.pbi Rtos_HL.pbi SysCfg.pbi
+build Uart_Receive.pbi : index Uart_Receive.xcl
+build M7000_part0.pbi : link system_stm32f10x.pbi port.pbi heap_4.pbi croutine.pbi event_groups.pbi list.pbi queue.pbi
+build M7000_part1.pbi : link stream_buffer.pbi tasks.pbi timers.pbi main.pbi stm32f10x_it.pbi misc.pbi stm32f10x_adc.pbi
+build M7000_part2.pbi : link stm32f10x_bkp.pbi stm32f10x_can.pbi stm32f10x_cec.pbi stm32f10x_crc.pbi stm32f10x_dac.pbi stm32f10x_dbgmcu.pbi stm32f10x_dma.pbi
+build M7000_part3.pbi : link stm32f10x_exti.pbi stm32f10x_flash.pbi stm32f10x_fsmc.pbi stm32f10x_gpio.pbi stm32f10x_i2c.pbi stm32f10x_iwdg.pbi stm32f10x_pwr.pbi
+build M7000_part4.pbi : link stm32f10x_rcc.pbi stm32f10x_rtc.pbi stm32f10x_sdio.pbi stm32f10x_spi.pbi stm32f10x_tim.pbi stm32f10x_usart.pbi stm32f10x_wwdg.pbi
+build M7000_part5.pbi : link AnyID_Stdlib.pbi Device.pbi LTE.pbi LTE_HL.pbi Rs485.pbi Rs485_HL.pbi Rtos_HL.pbi
+build M7000_part6.pbi : link SysCfg.pbi Uart_Receive.pbi
 build M7000.pbd : link M7000_part0.pbi M7000_part1.pbi M7000_part2.pbi M7000_part3.pbi M7000_part4.pbi M7000_part5.pbi M7000_part6.pbi
 build M7000.pbw : browsedata M7000.pbd
 

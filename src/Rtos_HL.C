@@ -198,6 +198,7 @@ int fputc(int Byte, FILE *pF)
 
 //定时器，硬件为基，软件扩展
 u32 FreeRTOSRunTimeTicks = 0;
+u32 g_nSysTick = 0;
 void Tim_Init(u32 period, u32 prescaler)
 {
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
@@ -219,6 +220,7 @@ void Tim_Init(u32 period, u32 prescaler)
 
     TIM_Cmd(TIM2, ENABLE);  
 }
+//psc = 72000000 / 720 = 100000
 
 void ConfigureTimeForRunTimeStats()
 {

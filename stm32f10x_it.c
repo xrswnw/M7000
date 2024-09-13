@@ -176,6 +176,12 @@ void TIM2_IRQHandler()
     if(TIM_GetITStatus(TIM2,TIM_IT_Update) == SET) //溢出中断
 	{
 		FreeRTOSRunTimeTicks++;
+        if((FreeRTOSRunTimeTicks % TIM_TOTAL_5MS) == 0) 
+        {//5ms中断，可做超时接收，兼容旧工程
+            g_nSysTick++;
+            
+            Uart_IncIdleTime(STICK_TIME_MS, g_sLTERcvFrame);
+        }
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);  //清除中断标志位
 	}
 }
@@ -194,7 +200,31 @@ void USART2_IRQHandler(void)
 }
 
 
-
+u16 g_nLteSr = 0;
+u16 g_nLteDr = 0;
+void LTE_IRQHandler(void)
+{
+    if((LTE_PORT->SR) & USART_IT_RXNE)
+    {
+        g_nLteDr = LTE_ReadByte();
+        g_sLTERcvFrame.buffer[g_sLTERcvFrame.index++] = g_nLteDr;
+        if(g_sLTERcvFrame.index < UART_BUFFER_MAX_LEN)
+        {
+            g_sLTERcvFrame.state |= UART_FLAG_RCV;
+        }
+        else
+        {
+           g_sLTERcvFrame.state = UART_STAT_END; 
+        }
+        g_sLTERcvFrame.idleTime = 0;
+    }
+    else
+    {
+        LTE_ReadByte();
+    }
+	g_nLteSr = LTE_PORT->SR;				//通过读取清空寄存器的值
+	g_nLteDr = LTE_PORT->DR;
+}
 
 
 

@@ -37,9 +37,14 @@ void Sys_CfgPeriphClk(FunctionalState state);
 void Sys_CfgNVIC(void);
 void Sys_CtrlIOInit(void);
 void Sys_Init(void);
-
-
-
-
 void Sys_TaskCreat();
+
+
+
+
+
+extern TaskHandle_t g_hSysProcessRs485;
+void Sys_Rs485ProcessTask(void *p);
+
+void Sys_RunTime(void *p);
 #endif

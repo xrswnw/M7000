@@ -14,6 +14,8 @@ extern UART_FRAME g_sRs485TempFrame;
 extern QueueHandle_t g_sRs485TxQueue;
 extern QueueHandle_t g_sRs485RxQueue;
 
+extern TaskHandle_t g_hRs485Rx;
+extern TaskHandle_t g_hRs485Tx;
 
 #define UART_TX_QUEUE_NUM           4
 #define UART_RX_QUEUE_NUM           4

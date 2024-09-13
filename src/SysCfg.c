@@ -85,6 +85,7 @@ void Sys_CfgPeriphClk(FunctionalState state)
     
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 |
                            RCC_APB1Periph_USART2 |
+                           RCC_APB1Periph_USART3 |
                            RCC_APB1Periph_PWR  |
                            RCC_APB1Periph_BKP  |
                            RCC_APB1Periph_WWDG , state);
@@ -127,11 +128,10 @@ void Sys_Init(void)
 	#if SYS_ENABLE_WDT
     WDG_InitIWDG();
 	#endif
-    NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );			//将所有优先级位都指定为抢占优先级位， 不保留任何优先级位作为子优先级位
+    NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );			                //将所有优先级位都指定为抢占优先级位， 不保留任何优先级位作为子优先级位，方便调度管理 否则报错
     Sys_CtrlIOInit();
 	RCC_ClocksTypeDef g_sSysclockFrep; RCC_GetClocksFreq(&g_sSysclockFrep);    //查看时钟频率
     
-
     Sys_EnableInt();
 }
 
@@ -227,8 +227,19 @@ void Sys_TaskCreat()
     
     //485
     Rs485_Init(RS485_BAUDRARE);
-    xTaskCreate(Rs485TxTask, "RS485_TX", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
-    xTaskCreate(Rs485RxTask, "RS485_RX", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(Rs485TxTask, "Rs485TxTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, &g_hRs485Tx);
+    xTaskCreate(Sys_Rs485ProcessTask, "Sys_Rs485ProcessTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, &g_hSysProcessRs485);
+    //
+    
+    //
+    #if configUSE_STATS_FORMATTING_FUNCTIONS
+        xTaskCreate(Sys_RunTime, "Sys_RunTime", configMINIMAL_STACK_SIZE * 2, NULL, tskIDLE_PRIORITY + 1, NULL);
+    #endif
+    //
+        
+    //
+    LTE_Init();
+    xTaskCreate(LTE_InitTask, "LTE_InitTask", configMINIMAL_STACK_SIZE, &g_sDeviceParams.lteParams, tskIDLE_PRIORITY + 1, &g_hLTEInit);
     //
     
     vTaskDelete(NULL);
@@ -236,3 +247,45 @@ void Sys_TaskCreat()
     //Exti Ceitical
     portEXIT_CRITICAL();
 }
+
+TaskHandle_t g_hSysProcessRs485 = NULL;
+void Sys_Rs485ProcessTask(void *p)
+{
+    UART_FRAME uartFrame = {0};
+    while (1)
+    {
+        memset(&uartFrame, 0, sizeof(uartFrame)); 
+        if(xQueueReceive(g_sRs485RxQueue, &uartFrame, portMAX_DELAY) == pdTRUE)
+        {
+            u16 pos = 0, lenth = 0, txLen = 0;
+            
+            lenth = Uart_UsrCheckFrame(uartFrame.frame, uartFrame.lenth, &pos);
+            if(lenth >= UART_FRAME_MIN_LEN)
+            {
+                txLen = Device_ProcessUartFrame(uartFrame.frame + pos, lenth, 0);
+                if(txLen && (txLen <= RS485_RX_FRAME_LEN))
+                {
+                    memcpy(uartFrame.frame, g_sDeviceRspFrame.buffer, g_sDeviceRspFrame.len);
+                    uartFrame.lenth = g_sDeviceRspFrame.len;
+                    if(xQueueSend(g_sRs485TxQueue, &uartFrame, portMAX_DELAY) != pdTRUE)                       //队列满待优化
+                    {   //写入发送队列
+                        
+                    }
+                }
+            }
+        }
+    }
+}
+//监控各个任务所占时间，调试使用
+void Sys_RunTime(void *p)
+{
+    char frame[256] = {0};          //堆栈区间过小可能导致越界
+    while(1)
+    {
+        vTaskGetRunTimeStats(frame);
+  
+        printf("%s\r\n", frame);
+        vTaskDelay(1000);
+    }
+}
+
