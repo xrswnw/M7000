@@ -41,10 +41,10 @@ void Rs485_InitInterface(u32 baudrate)
     USART_Init(RS485_PORT, &USART_InitStructure);
     // Enable the USART
     USART_Cmd(RS485_PORT, ENABLE);
-    
+    //USART_IT_IDLE   USART_IT_RXNE
     USART_ITConfig(RS485_PORT, USART_IT_IDLE, ENABLE);
-    //USART_DMACmd(RS485_PORT, USART_DMAReq_Tx, ENABLE);
-    //USART_DMACmd(RS485_PORT, USART_DMAReq_Rx, ENABLE);
+    USART_DMACmd(RS485_PORT, USART_DMAReq_Tx, ENABLE);
+    USART_DMACmd(RS485_PORT, USART_DMAReq_Rx, ENABLE);
 }
 
 void Rs485_ConfigInt(void)
@@ -53,8 +53,8 @@ void Rs485_ConfigInt(void)
 
     NVIC_InitStructure.NVIC_IRQChannel = RS485_INT_CHANNEL;
 
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = INT_PRIORITY_UART_RX;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = INT_PRIORITY_GROUP;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 8;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 8;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 
     NVIC_Init(&NVIC_InitStructure);

@@ -193,4 +193,67 @@ void USART2_IRQHandler(void)
     g_nLogDr = UART_PORT->DR;    
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//485
+
+
+void Rs485_RxDMAIRQHandler(void)
+{
+    Rs485_DisableRxDma();           //接收缓冲区满，一般不会出现这样的情况，如果有，就可能系统有故障
+    g_sRs485TempFrame.lenth = Rs485_GetRxLen(); 
+}
+
+void Rs485_TxDMAIRQHandler(void)
+{
+    Rs485_DisableTxDma();           //DMA完成后，最后一个字节可能没有发送出去，需要在主循环中做判断处理
+    Rs485_EnableRxDma();           //使能接收
+}
+
+u16 g_nRS485Sr = 0;
+u16 g_nRS485Dr = 0;
+void Rs485_IRQHandler(void)
+{
+    if(RS485_PORT->SR & RS485_SR_IDLE)
+    {    
+        Rs485_DisableRxDma();
+        g_sRs485TempFrame.lenth = Rs485_GetRxLen(); 
+        
+        //加入校验，通过则写入队列.若数据处理繁琐，可在中断外处理
+        if(1)
+        {
+            if (xQueueSendToBackFromISR(g_sRs485RxQueue, (void *)&g_sRs485TempFrame, NULL) == pdTRUE)
+            {   //写入失败处理
+              
+            }
+        }
+        Rs485_RstFrame();
+        Rs485_EnableRxDma();
+    }
+    g_nRS485Sr = RS485_PORT->SR;  //通过读取SR和DR清空中断标志
+    g_nRS485Dr = RS485_PORT->DR;    
+}
+//
+
+
 /******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

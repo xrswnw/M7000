@@ -319,7 +319,7 @@ void vPortEnterCritical( void )
      * the critical nesting count is 1 to protect against recursive calls if the
      * assert function also uses a critical section. */
     if( uxCriticalNesting == 1 )
-    {
+    {//ISRº¯Êý
         configASSERT( ( portNVIC_INT_CTRL_REG & portVECTACTIVE_MASK ) == 0 );
     }
 }

@@ -120,7 +120,7 @@ void Uart_InitTxDma(u8 *pTxBuffer, u32 len)
     
     NVIC_InitStructure.NVIC_IRQChannel = UART_TXDMA_INT;                                       //
 
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;    //
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 8;    //
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x03;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 

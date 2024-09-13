@@ -127,6 +127,7 @@ void Sys_Init(void)
 	#if SYS_ENABLE_WDT
     WDG_InitIWDG();
 	#endif
+    NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );			//将所有优先级位都指定为抢占优先级位， 不保留任何优先级位作为子优先级位
     Sys_CtrlIOInit();
 	RCC_ClocksTypeDef g_sSysclockFrep; RCC_GetClocksFreq(&g_sSysclockFrep);    //查看时钟频率
     
@@ -224,16 +225,12 @@ void Sys_TaskCreat()
         Uart_Init();
     #endif
     
-
-    
-    
-    
-    
-    
+    //485
     Rs485_Init(RS485_BAUDRARE);
-    xTaskCreate(vUartTxTask, "UART_TX", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
-    xTaskCreate(vUartRxTask, "UART_RX", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
-  
+    xTaskCreate(Rs485TxTask, "RS485_TX", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(Rs485RxTask, "RS485_RX", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    //
+    
     vTaskDelete(NULL);
     
     //Exti Ceitical

@@ -78,7 +78,7 @@
 #define configUSE_MALLOC_FAILED_HOOK			0                                   //malloc函数回调。1:启用，需编写回调函数；0:不启用   void vApplicationMallocFailedHook( void );
 #define configUSE_APPLICATION_TASK_TAG			0
 #define configUSE_COUNTING_SEMAPHORES			1
-#define configUSE_QUEUE_SETS                            0								//使用队列集
+#define configUSE_QUEUE_SETS                    0								//使用队列集
 
 #define configGENERATE_RUN_TIME_STATS                   1                               //定时器任务
 #define configUSE_STATS_FORMATTING_FUNCTIONS            1                              //统计任务运行时间  vTaskList()
