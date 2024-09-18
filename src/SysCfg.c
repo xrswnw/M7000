@@ -239,7 +239,8 @@ void Sys_TaskCreat()
         
     //
     LTE_Init();
-    xTaskCreate(LTE_InitTask, "LTE_InitTask", configMINIMAL_STACK_SIZE, &g_sDeviceParams.lteParams, tskIDLE_PRIORITY + 1, &g_hLTEInit);
+    xTaskCreate(LTE_InitTask, "LTE_InitTask", configMINIMAL_STACK_SIZE * 2, &g_sDeviceParams.lteParams, tskIDLE_PRIORITY + 1, &g_hLTEInit);
+    xTaskCreate(Device_ProcessMqtt, "Device_ProcessMqtt", configMINIMAL_STACK_SIZE * 2, NULL, tskIDLE_PRIORITY + 1, &g_hDevicePMqtt);
     //
     
     vTaskDelete(NULL);

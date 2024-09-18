@@ -479,14 +479,15 @@ void LTE_InitTask(void *p)
     u8 txFrameStr[LTE_TX_MAX_LENTH] = {0};             //256即可，可优化
     while(1)
     {
+        pParams = (LTE_PARAMS *)p;
         if(g_nLTEStatus == LTE_STATUS_IDLE)
         {
             LTE_ConnectInit(&g_sLTEConnect, LTE_CNT_CMD_PWRON, pParams);
             g_nLTEStatus = LTE_STATUS_INIT;
         }
-        else if(g_nLTEStatus ^ LTE_STATUS_CONNECT_OK)
+        else if((g_nLTEStatus ^ LTE_STATUS_CONNECT_OK) && 
+                (g_nLTEStatus ^ g_nLTEStatus))
         {
-            pParams = (LTE_PARAMS *)p;
             if(USART_GetFlagStatus(LTE_PORT, USART_FLAG_NE | USART_FLAG_FE | USART_FLAG_PE))
             {
                 USART_ClearFlag(LTE_PORT, USART_FLAG_NE | USART_FLAG_FE | USART_FLAG_PE);
@@ -528,7 +529,7 @@ void LTE_InitTask(void *p)
                     }
                     else
                     {
-                        g_sLTERcvFrame.state = UART_FLAG_RCV;                          //继续接收
+                        g_sLTERcvFrame.state = UART_FLAG_RCV;                   //继续接收
                         g_sLTERcvFrame.idleTime = 0;
                     }
                 }
@@ -599,7 +600,7 @@ void LTE_InitTask(void *p)
                     LTE_ConnectInit(&g_sLTEConnect, LTE_CNT_CMD_PWRON, pParams);
                 }
                 a_ClearStateBit(g_sLTEConnect.state, LTE_CNT_OP_STAT_STEP);
-            } 
+            }
         }
         else
         {

@@ -191,6 +191,8 @@ extern LTE_CONNECT g_sLTEConnect;
 
 extern u8 g_nImei[LTE_IMEI_LEN + 2];
 extern u8 g_nImeiStr[LTE_IMEI_LEN + 2];
+extern u8 g_nLTEStatus;
+
 extern TaskHandle_t g_hLTEInit;
 
 BOOL LTE_SendBuffer( u8 *pRxBuf);
